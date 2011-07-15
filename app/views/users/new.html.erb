@@ -1,0 +1,30 @@
+<h1 class="title"><span>添加新的团队成员</span></h1>
+<p>添加团队成员请务必慎重。带*号的为必填字段。</p>
+<p>
+<% @user.password = @user.password_confirmation = nil %>
+<%= error_messages_for :user %>
+</p>
+<table>
+<% form_for :user, :url => users_path do |f| -%>
+	<tr><td width="25%" class="h">用户名(*)</td><td><%= f.text_field :login %></td></tr>
+	<tr><td class="h">真实姓名(*)</td><td><%= f.text_field :name %></td></tr>
+	<tr><td class="h">Email(*)</td><td><%= f.text_field :email %></td></tr>
+	<tr><td class="h">密码(*)</td><td><%= f.password_field :password %></td></tr>
+	<tr><td class="h">密码确认(*)</td><td><%= f.password_field :password_confirmation %></td></tr>
+	<tr><td class="h">学校</td><td><%= f.text_field :school %></td></tr>
+	<tr><td class="h">院系</td><td><%= f.text_field :department %></td></tr>
+	<tr><td class="h">专业</td><td><%= f.text_field :major %></td></tr>
+	<tr><td class="h">手机</td><td><%= f.text_field :mobile %></td></tr>
+	<tr><td class="h">家庭电话</td><td><%= f.text_field :home %></td></tr>
+	<tr><td class="h">宿舍电话</td><td><%= f.text_field :dorm %></td></tr>
+	<tr><td class="h">QQ</td><td><%= f.text_field :QQ %></td></tr>
+	<tr><td class="h">邮编(家)</td><td><%= f.text_field :homepostcode %></td></tr>
+	<tr><td class="h">地址(家)</td><td><%= f.text_field :homeaddr %></td></tr>
+	<tr><td class="h">邮编(校)</td><td><%= f.text_field :schpostcode %></td></tr>
+	<tr><td class="h">地址(校)</td><td><%= f.text_field :schaddr %></td></tr>
+	
+	<tr><td class="h">参与项目</td><td><%= collection_select(:user, :projects, Project.all, :id, :title, {}, :multiple => true,:style =>"width:220px") %>
+	</td></tr>
+	<tr><td colspan="2"><%= submit_tag '提交' %></td></tr>
+<% end -%>
+</table>

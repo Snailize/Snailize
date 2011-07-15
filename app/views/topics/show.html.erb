@@ -1,0 +1,19 @@
+<table style="table-layout: auto">
+	<thead><tr><td colspan="2" style="text-align:left"><%= @topic.title %></td></tr></thead>
+	<tr style="vertical-align:top"><td width="30"><%= link_to @topic.author.name,@topic.author %><br /><br /><%= @topic.created_at.strftime("%Y/%m/%d") %><br /><%= @topic.created_at.strftime("%I:%M:%S") %></td><td style="text-align:left"><%= @topic.body %></td></tr>
+</table>
+
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead><tr><td colspan="2" style="text-align:left">回复</td></tr></thead>
+<% if @topic.replies.blank? %>
+	<tr><td colspan="2">暂无回复</td></tr>
+<% else %>	
+	<% @topic.replies.each do |r| %>
+		<tr style="vertical-align:top"><td width="30"><%= link_to r.user.name, r.user %><br /><br /><%= r.created_at.strftime("%Y/%m/%d") %><br /><%= r.created_at.strftime("%I:%M:%S") %></td><td style="text-align:left"><%= r.body %></td></tr>
+	<% end  %>
+<% end %>
+	<% form_for(@reply) do |f| %>
+	  <%= f.error_messages %>
+		<tr><td colspan="2"><%= f.text_area :body,:rows=>5 %><%= f.hidden_field :topic_id %><br /><%= f.submit '发表新回复' %></td></tr>
+	<% end %>
+</table>

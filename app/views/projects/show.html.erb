@@ -1,0 +1,125 @@
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('projectinfo'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title"><%= @project.title %></td></tr></thead>
+	<tbody id="projectinfo">
+	<tr><td width="60">负责人</td><td><%= link_to @project.person_in_charge.name,@project.person_in_charge %></td></tr>
+	<tr><td>开始日期</td><td><%= @project.created_at.strftime("%Y年%m月%d日") %></td></tr>
+	<tr><td>最终目标</td><td><%= @project.longaim %></td></tr>
+	<tr><td>项目进度</td><td><%= progress_bar("progress_bar_#{@project.id}",@project.finished,true,false) %></td></tr>
+	<tr><td>项目成员</td><td><%= @project.users.collect{|u| link_to u.name,u}.join(',') %></td></tr>
+	<tr><td>文档</td><td style="text-align:left;"><%= @project.documents.collect{|u| "<span style=\"color:white\">"+link_to(u.filename,"/file/#{u.filename}")+"</span> "+u.title}.join('<br />') %></td></tr>
+	<tr><td>近期目标</td><td style="text-align:left;"><%= simple_format @project.todo %></td></tr>
+	<tr onclick=" Effect.toggle($('miaoshuhere'),'Appear', {duration:0.5})" style="cursor:pointer"><td colspan="2" class="title" style="text-align:center">项目描述</td></tr>
+	<tr id="miaoshuhere" style="display:none"><td colspan="2" style="text-align:left"><%= @project.desc %></td></tr>
+	</tbody>
+</table>
+
+<div class="boxed" style="margin-bottom:10px">
+	<h2 class="title"  onclick=" Effect.toggle($('prjcontent'),'Blind', {duration:0.5})" style="cursor:pointer">日志</h2>
+	<div class="content" id="prjcontent" style="display:none">
+					<ul>
+	<% @project.logs.each do |m| %>
+		<li>
+		<% if 1==m.ltype %>
+							<h3><span style="color:gold">进度更改</span> <%= m.created_at.strftime("%Y-%m-%d %H:%M:%S") %> <% if m.change>0 %> <span style="color:red">+ <% elsif m.change<0 %> <span style="color:green"> <% else %> <span style="color:white"> <% end %> <%= m.change %></span></h3>
+		<% elsif 2==m.ltype %>
+							<h3><span style="color:#FF3366"> 问题报告</span> <%= m.created_at.strftime("%Y-%m-%d %H:%M:%S") %> <%= m.user.name %></h3>
+		<% elsif 3==m.ltype %>
+							<h3><span style="color:#2A82FF"> 项目评估</span> <%= m.created_at.strftime("%Y-%m-%d %H:%M:%S") %> <%= m.user.name %></h3>
+		<% end %>
+					<p><%= m.body %></p>
+		</li>
+	<% end %>
+	</ul>
+	</div>
+</div>
+
+<% unless error_messages_for('log').blank? %>
+<div class="boxed" style="margin-bottom:10px">
+	<h2 class="title" style="color:red;">错误</h2>
+	<div class="content">
+	<span style="">  <%= error_messages_for 'log' %> </span>
+	</div>
+</div>
+<% end  %>
+
+<% if current_user.id == @project.person_in_charge.id %>
+<% form_for :log,@log,:url=>{:controller=>'projects',:action=>'createlog'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('addnewlog'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">进度变更</td></tr></thead>
+	<tbody id="addnewlog" style="display:none">
+	<tr><td width="80">变更数值</td><td style="text-align:left;"><%= f.text_field :change %></td></tr>
+	<tr><td> </td><td style="text-align:left;color:white">输入正值表示项目进展，负值表示倒退，进度变化后进度值不能小于0或大于1。</td></tr>
+	<tr><td>进度变更原因</td><td style="text-align:left;"><%= f.text_area :body,:rows=>5,:cols=>28 %> <%= f.hidden_field :project_id %></td></tr>
+	<tr><td colspan="2"><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% form_for :project,@project,:url=>{:controller=>'projects',:action=>'updatetodo'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('updatetodo'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">近期目标变更</td></tr></thead>
+	<tbody id="updatetodo" style="display:none">
+	<%= f.error_messages %>
+	<tr><td colspan="2"><%= f.text_area :todo,:rows=>5,:cols=>28 %> <%= f.hidden_field :id %><br /><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% end %>
+
+<% if @project.users.collect(&:id).include?(current_user.id) %>
+<% form_for :log,@log,:url=>{:controller=>'projects',:action=>'createprob'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('addnewprob'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">添加问题报告</td></tr></thead>
+	<tbody id="addnewprob" style="display:none">
+	<tr><td colspan="2"><%= f.text_area :body,:rows=>5,:cols=>28 %> <%= f.hidden_field :project_id %><br /><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% end %>
+
+<% form_for :log,@log,:url=>{:controller=>'projects',:action=>'createcomment'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('createcomment'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">评估项目</td></tr></thead>
+	<tbody id="createcomment" style="display:none">
+	<tr><td colspan="2"><%= f.text_area :body,:rows=>5,:cols=>28 %> <%= f.hidden_field :project_id %><br /><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+
+
+<% if current_user.id == @project.person_in_charge.id %>
+<% form_for :project,@project,:url=>{:controller=>'projects',:action=>'alterdesc'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('alterdesc'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">修改项目描述</td></tr></thead>
+	<tbody id="alterdesc" style="display:none">
+	<%= f.error_messages %>
+	<tr><td colspan="2"><%= f.text_area :desc,:rows=>5,:cols=>28 %><%= f.hidden_field :id %> <br /><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% end %>
+
+
+<% if @project.users.collect(&:id).include?(current_user.id) %>
+<% @document = Document.new;@document.project_id = @project.id  %>
+<% form_for(@document, :html=>{:multipart => true}) do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('addnewdoc'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">添加文档</td></tr></thead>
+	<tbody id="addnewdoc" style="display:none">
+	<tr><td>描述</td><td> <%= f.text_field :title %></td></tr>
+	<tr><td>文件</td><td> <%= f.file_field :body %><%= f.hidden_field :project_id %></td></tr>
+	<tr><td colspan="2"><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% end %>
+
+<% if current_user.id == @project.person_in_charge.id %>
+<% form_for :project,@project,:url=>{:controller=>'projects',:action=>'alterusr'} do |f| %>
+<table style="table-layout: auto;margin-bottom:10px">
+	<thead onclick=" Effect.toggle($('alterusr'),'Appear', {duration:0.5})" style="cursor:pointer"><tr><td colspan="2" class="title">修改成员</td></tr></thead>
+	<tbody id="alterusr" style="display:none">
+	<tr><td colspan="2"><%= collection_select(:project, :user_ids, User.all, :id, :name, {}, :multiple => true,:style =>"width:220px") %><%= f.hidden_field :id %> <br /><%= f.submit '提交' %></td></tr>
+	</tbody>
+</table>
+<% end %>
+<% end %>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>The Snailize Team</title>
+<%= javascript_include_tag :all %>
+<%= stylesheet_link_tag 'default' %>
+<%= progress_bar_includes %>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<h1><%= link_to 'Snailize',root_path %></h1>
+		<p><%= link_to 'A TEAM FOR THE FUTURE',root_path %></p>
+	</div>
+	<!-- end header -->
+	<div id="menu">
+		<h2>Main Menu</h2>
+		<ul>
+			<li <%='class="active"' if 'home'==controller.controller_name %>><a href="<%= root_path %>">首页</a></li>
+			<li <%='class="active"' if 'users'==controller.controller_name %>><a href="<%= users_path %>">成员</a></li>
+			<li <%='class="active"' if 'projects'==controller.controller_name %>><a href="<%= projects_path %>">项目</a></li>
+			<li <%='class="active"' if 'topics'==controller.controller_name %>><a href="<%= topics_path %>">讨论区</a></li>
+			<li><a href="<%= logout_path %>">退出登录(<%= current_user.login %>)</a></li>
+		</ul>
+	</div>
+	<!-- end menu -->
+	<div id="page">
+		<div id="content">
+			<% if flash[:notice]%>
+			<div class="boxed" style="margin:8px">
+				<h2 class="title" style="background-color:green"><%= flash[:notice] %></h2>
+			</div>
+			<% end %>
+			<% if flash[:error]%>
+			<div class="boxed" style="margin:8px">
+				<h2 class="title" style="background-color:red"><%= flash[:error] %></h2>
+			</div>
+			<% end %>
+			<%= yield %>
+		</div>
+		<div id="sidebar">
+			<ul>
+				<li id="search">
+					<form id="searchform" method="get" action="/projects">
+						<fieldset>
+						<legend>GO</legend>
+						输入项目代号
+						<input id="searchfield" type="text" name="codename" value="" />
+						<input id="searchsubmit" type="submit" value="直达项目页" />
+						</fieldset>
+					</form>
+				</li>
+						<li id="news">
+							<h2>公共情报栏[<%= link_to '+',new_message_path,:alt=>'发布情报' %>]</h2>
+							<ul>
+				<% Message.all(:limit=>3,:order=>'created_at DESC').each do |m| %>
+								<li>
+									<h3><%= m.created_at.strftime("%Y-%m-%d") %> <%= m.author.name %></h3>
+									<p><%= m.body %></p>
+								</li>
+				<% end %>
+								<li style="text-align:right">
+									<a href="<%= messages_path %>">更多...</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<h2>最新话题[<%= link_to '+',new_topic_path,:alt=>'发布话题' %>]</h2>
+							<ul class="sb">
+								<% Topic.all(:limit=>5,:order=>'created_at DESC').each do |t| %>
+												<li><%= link_to t.title,t %></li>
+								<% end %>
+							</ul>
+						</li>
+			</ul>
+		</div>
+		<!-- end sidebar -->
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end page -->
+	<div id="footer">
+		<p id="legal">Copyright &copy; 2009 The Snailize Team. All Rights Reserved. </p>
+		<p id="links"><a href=\"http://validator.w3.org/check?uri=referer\">验证 XHTML</a> | <a href=\"http://jigsaw.w3.org/css-validator/check/referer\">验证 CSS</a></p>
+	</div>
+	<!-- end footer -->
+</div>
+<!-- end wrapper -->
+</body>
+</html>

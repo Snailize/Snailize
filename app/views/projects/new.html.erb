@@ -1,0 +1,15 @@
+<h1 class="title"><span>添加新项目</span></h1>
+<p>慎重操作。带*为必填</p>
+<p>
+<%= error_messages_for :project %>
+</p>
+<table>
+<% form_for(@project) do |f| %>
+	<tr><td width="25%" class="h">负责人</td><td><%= current_user.name %></td></tr>
+	<tr><td class="h">名称(*)</td><td><%= f.text_field :title %></td></tr>
+	<tr><td class="h">代号(*)</td><td><%= f.text_field :codename %></td></tr>
+	<tr><td colspan="2">创建后请进入项目页修改更多信息</td></tr>
+	</td></tr>
+	<tr><td colspan="2"><%= submit_tag '提交' %></td></tr>
+<% end -%>
+</table>

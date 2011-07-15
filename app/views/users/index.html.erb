@@ -1,0 +1,15 @@
+	<table>
+		<thead>
+		<tr><td width="120">照片</td><td>姓名</td><td>用户名</td><td>[<%= link_to '+',new_user_path %>]</td></tr>
+		</thead>
+		<tbody>
+<% @users.each do |user| %>
+		<tr>
+	    <td><%= image_tag "photo_#{user.login}.jpg" %></td>
+	    <td><%=h user.name %></td>
+	    <td><%=h user.login%></td>
+			<td>[<%= link_to '详',user %>] [<%= link_to '编',edit_user_path(user) %>]</td>
+		</tr>
+<% end %>
+		</tbody>
+	</table>

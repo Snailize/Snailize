@@ -1,0 +1,35 @@
+<table>
+	<tr><td width="120"><%= image_tag "photo_#{@user.login}.jpg" %></td>
+		<td style="text-align:left;vertical-align: top"><span style="font-size:150%;font-weight:bold;"><%= @user.name %></span><br /><br />
+			<%= @user.school %><br />
+			<%= @user.department %><br />
+			<%= @user.major %>
+		</td>
+	</tr>
+	<tr><td>用户名:</td><td><%= @user.login %></td></tr>
+	<tr><td>Email:</td><td><%= @user.email %></td></tr>
+	<tr><td>加入日期:</td><td><%= @user.created_at.strftime("%Y-%m-%d") %></td></tr>
+		<tr><td>参与的项目:</td><td>
+			<% @user.projects.each do |p|%>
+				<%= link_to p.title,p %> <br />
+			<% end %>
+			</td></tr>
+		<tr><td colspan="2" style="height:1px"></td></tr>
+		<tr><td>手机:</td><td><%= @user.mobile %></td></tr>
+		<tr><td>家庭电话:</td><td><%= @user.home %></td></tr>
+		<tr><td>宿舍电话:</td><td><%= @user.dorm %></td></tr>
+		<tr><td>QQ:</td><td><%= @user.QQ %></td></tr>
+		<tr><td colspan="2" style="height:1px"></td></tr>
+		<tr><td>邮编(家):</td><td><%= @user.homepostcode %></td></tr>
+		<tr><td>地址(家):</td><td><%= @user.homeaddr %></td></tr>
+		<tr><td>邮编(校):</td><td><%= @user.schpostcode %></td></tr>
+		<tr><td>地址(校):</td><td><%= @user.schaddr %></td></tr>
+		<tr><td colspan="2" style="height:1px"></td></tr>
+		<tr><td>发表的讨论话题:</td><td style="text-align:left;">
+			<ul class="sb" style="list-style:none;padding-left:10px">
+			<% @user.topics.each do |t|%>
+				<li> <%= link_to t.title,t %> </li>
+			<% end %>
+			</ul>
+			</td></tr>
+	</table>

@@ -1,0 +1,15 @@
+	<table>
+		<thead>
+		<tr><td width="30">代</td><td>[<%= link_to '+',new_project_path %>]</td><td>负责</td><td width="135">完成度</td></tr>
+		</thead>
+		<tbody>
+<% @projects.each do |project| %>
+		<tr>
+	    <td><%=h project.codename %></td>
+	    <td><%= link_to project.title,project %></td>
+	    <td><%= project.person_in_charge.name %></td>
+	    <td><%= progress_bar("progress_bar_#{project.id}",project.finished,true,true) %></td>
+		</tr>
+<% end %>
+		</tbody>
+	</table>

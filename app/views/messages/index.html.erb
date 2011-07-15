@@ -1,0 +1,6 @@
+<table style="table-layout: auto">
+<% @messages.each do |m|  %>
+	<tr style="background-color:black"><td width="60" style="text-align:left;"><%= link_to m.author.name,m.author %></td><td style="text-align:left;"><%= m.created_at.strftime("%Y/%m/%d %I:%M%p") %></td></tr>
+	<tr style="vertical-align:top;color:white"><td colspan="2" style="text-align:left;padding-left:20px"><%= m.body %></td></tr>
+<%end%>
+</table>

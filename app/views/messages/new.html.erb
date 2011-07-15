@@ -1,0 +1,12 @@
+<h1>发布情报</h1>
+<p>所发情报的全文将直接显示在侧边栏，故请尽量言简意赅。如需讨论或发表篇幅较长的文章，请使用讨论区。</p>
+<% form_for(@message) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.text_area :body %>
+  </p>
+  <p>
+    <%= f.submit '发表' %>
+  </p>
+<% end %>
