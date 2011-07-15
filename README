@@ -1,3 +1,23 @@
+RAILS 2.3
+
+USR MYSQL 
+
+database 'snailize'
+
+CREATE DATABASE `snailize` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+
+
+
+change the password in config/database.yml
+then script/server
+
+0.0.0.0:3000
+
+this is on the server of Rails' version 2.3
+
+
+
 == Welcome to Rails
 
 Rails is a web-application framework that includes everything needed to create 
